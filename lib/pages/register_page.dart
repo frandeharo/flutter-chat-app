@@ -1,4 +1,5 @@
 import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class RegisterPage extends StatelessWidget {
                   ),
                   _Form(),
                   Labels(
-                    ruta: 'register',
+                    ruta: 'login',
                     titulo: '¿Ya tienes una cuenta?',
                     subtitulo: 'Lógate',
                   ),
@@ -57,6 +58,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -90,7 +92,7 @@ class __FormState extends State<_Form> {
                         await authService.register(nombreCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim());
 
                     if (registroOK == true) {
-                      // TODO: Conectar sockets
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
                       mostrarAlerta(context, 'Problemas al registrar', registroOK);
